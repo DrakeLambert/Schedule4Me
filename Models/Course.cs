@@ -16,7 +16,5 @@ namespace Schedule4Me.Models
 		/// The number for this course
 		/// </summary>
 		public int Number { get; set; }
-
-		public 
 	}
 }
