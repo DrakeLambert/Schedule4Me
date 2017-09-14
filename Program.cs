@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Http;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Schedule4Me.Models;
 
 namespace Schedule4Me
 {
-    public class Program
+	public class Program
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://lsu-api.herokuapp.com");
+            var deptAbbr = Console.ReadLine();
+            var returned = client.GetStringAsync($"department?dept={ deptAbbr }").Result;
+            var courses = JsonConvert.DeserializeObject<List<Course>>(returned);
+
+            Console.WriteLine($"Courses: { courses.Count }");
+            //Console.WriteLine(returned);
+
+            //BuildWebHost(args).Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
