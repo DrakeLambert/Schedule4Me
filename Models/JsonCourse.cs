@@ -3,11 +3,6 @@ using System.Linq;
 
 namespace Schedule4Me.Models
 {
-	public class Department
-	{
-		public Course[] Classes { get; set; }
-	}
-
 	public class Course
 	{
 		public string abbreviation { get; set; }
