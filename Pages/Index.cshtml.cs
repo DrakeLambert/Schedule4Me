@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using Schedule4Me.Models;
 
-namespace MyApp.Namespace
+namespace Schedule4Me.Pages
 {
 	public class IndexModel : PageModel
 	{

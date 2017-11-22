@@ -1,21 +1,39 @@
 ﻿@page
+@using Schedule4Me.Pages
+@model IndexModel
 <!DOCTYPE html>
 <html>
+	<head>
+		 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+	</head>
 	<body>
-		<table>
+		<table style="width: 100%">
 			<tr>
 				<th>
-					Course Title
+					Course
+				</th>
+				<th>
+					Title
+				</th>
+				<th>
+					Description
 				</th>
 			</tr>
+			@foreach (var course in Model.Courses) 
+			{
+				<tr>
+					<td>
+						@(course.abbreviation) @(course.number)
+					</td>
+					<td>
+						@(course.full_title)
+					</td>
+					<td>
+						@(course.description)
+					</td>
+				</tr>
+			}
 		</table>
-		@for (var i = 0; i < 20; i++) 
-		{
-			<tr>
-				<td>
-					@(i)
-				</td>
-			</tr>
-		}
 	</body>
 </html>
