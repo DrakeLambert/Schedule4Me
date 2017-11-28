@@ -12,7 +12,12 @@ namespace Schedule4Me.Models
 		public string description { get; set; }
 		public string[] comments { get; set; }
 		public Section[] sections { get; set; }
-	}
+
+        public override string ToString()
+        {
+            return $"{abbreviation} {number}";
+        }
+    }
 
 	public class Section
 	{
