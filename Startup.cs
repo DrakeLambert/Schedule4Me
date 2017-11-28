@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Schedule4Me.Models;
 
 namespace Schedule4Me
 {
@@ -16,6 +17,7 @@ namespace Schedule4Me
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSingleton<CourseCache>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
