@@ -17,7 +17,7 @@ namespace Schedule4Me.Pages
         [BindProperty]
         public string Courses { get; set; }
 
-        public IEnumerable<Course> FormattedCourses { get; set; }
+        public List<Course> FormattedCourses { get; set; }
 
         private ILogger<IndexModel> _logger;
 
@@ -50,11 +50,12 @@ namespace Schedule4Me.Pages
             FormattedCourses =
                 Courses
                 .Split(',')
-                .ToList()
+                .AsQueryable()
                 .Select(userInput => Regex.Match(userInput, _courseNamePattern))
                 .Where(match => match.Success == true)
                 .Select(match => match.Value.ToLower())
-                .Select(courseName => _courseCache.GetCourse(GetPrefix(courseName), GetNumber(courseName)));
+                .Select(courseName => _courseCache.GetCourse(GetPrefix(courseName), GetNumber(courseName)))
+                .ToList();
 
             return Page();
         }
