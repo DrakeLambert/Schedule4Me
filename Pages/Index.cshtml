@@ -1,6 +1,7 @@
 ﻿@page
 @using Schedule4Me.Pages
 @model IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html>
 	<head>
@@ -8,32 +9,21 @@
   		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 	</head>
 	<body>
-		<table style="width: 100%">
-			<tr>
-				<th>
-					Course
-				</th>
-				<th>
-					Title
-				</th>
-				<th>
-					Description
-				</th>
-			</tr>
-			@foreach (var course in Model.Courses) 
+		<div asp-validation-summary="All"></div>
+		<form method="POST">
+        	<div>
+				Enter classes separated by commas (,): 
+				<input asp-for="Courses" />
+			</div>
+        	<input type="submit" />
+		</form>
+		<ul>
+			@foreach (var course in Model.FormattedCourses) 
 			{
-				<tr>
-					<td>
-						@(course.abbreviation) @(course.number)
-					</td>
-					<td>
-						@(course.full_title)
-					</td>
-					<td>
-						@(course.description)
-					</td>
-				</tr>
+				<li>
+					@(course)
+				</li>
 			}
-		</table>
+		</ul>
 	</body>
 </html>
