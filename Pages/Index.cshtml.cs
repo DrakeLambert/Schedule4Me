@@ -1,25 +1,107 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 using Schedule4Me.Models;
+using System.Text.RegularExpressions;
+using System.Net.Http;
+using System;
+using Newtonsoft.Json;
 
 namespace Schedule4Me.Pages
 {
-	public class IndexModel : PageModel
-	{
-		public List<Course> Courses { get; private set; }
+    public class IndexModel : PageModel
+    {
+        [BindProperty]
+        public string Courses { get; set; }
 
-		public void OnGet()
-		{
-			var client = new HttpClient();
-			client.BaseAddress = new Uri("https://lsu-api.herokuapp.com");
+        public IEnumerable<Course> FormattedCourses { get; set; }
 
-			Courses = JsonConvert.DeserializeObject<List<Course>>(client.GetStringAsync("department?dept=csc").Result);
-		}
-	}
+        private ILogger<IndexModel> _logger;
+
+        private const string _coursePrefixPattern = "[A-z]{3,4}";
+
+        private const string _courseNumberPattern = "[0-9]{4}";
+
+        private const string _courseNamePattern = _coursePrefixPattern + " *" + _courseNumberPattern;
+
+        private const string _apiEndpoint = "https://lsu-api.herokuapp.com";
+
+        public IndexModel(ILogger<IndexModel> logger)
+        {
+            _logger = logger;
+            FormattedCourses = new List<Course>();
+        }
+
+        public void OnGet()
+        {
+            FormattedCourses = new List<Course>();
+        }
+
+        public IActionResult OnPostAsync()
+        {
+            if (Courses == null)
+            {
+                return Page();
+            }
+
+            var knownDepartments = new Dictionary<string, List<Course>>();
+
+            FormattedCourses =
+                Courses
+                .Split(',')
+                .ToList()
+                .Select(c => Regex.Match(c, _courseNamePattern))
+                .Where(m => m.Success == true)
+                .Select(m => m.Value.ToLower())
+                .Select(s =>
+                {
+                    var prefix = GetPrefix(s);
+                    if (knownDepartments.ContainsKey(prefix))
+                    {
+                        return knownDepartments[prefix];
+                    }
+                    else
+                    {
+                        return GetDepartment(prefix) ?? new List<Course>();
+                    }
+                })
+                .SelectMany(c => c);
+
+            return Page();
+        }
+
+        private List<Course> GetDepartment(string department)
+        {
+            return JsonConvert.DeserializeObject<List<Course>>
+            (
+                new HttpClient
+                {
+                    BaseAddress = new Uri(_apiEndpoint)
+                }
+                .GetStringAsync($"department?dept={department}")
+                .Result
+            );
+        }
+
+        private string GetPrefix(string courseName)
+        {
+            return Regex.Matches(courseName, _coursePrefixPattern)
+                .Where(m => m.Success)
+                .Aggregate((m1, m2) =>
+                {
+                    if (m1.Length > m2.Length)
+                    {
+                        return m1;
+                    }
+                    else
+                    {
+                        return m2;
+                    }
+                })
+                .Value;
+        }
+    }
 }
