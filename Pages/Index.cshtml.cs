@@ -35,12 +35,7 @@ namespace Schedule4Me.Pages
             FormattedCourses = new List<Course>();
         }
 
-        public void OnGet()
-        {
-            FormattedCourses = new List<Course>();
-        }
-
-        public IActionResult OnPostAsync()
+        public IActionResult OnPost()
         {
             if (Courses == null)
             {
@@ -63,7 +58,6 @@ namespace Schedule4Me.Pages
                     {
                         knownDepartments.Add(prefix, GetDepartment(prefix));
                     }
-                    _logger.LogInformation("");
                     return knownDepartments[prefix]
                         .Where(course => course.number == GetNumber(courseName));
                 });
