@@ -10,7 +10,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 	<body>
-		<nav class="light-blue lighten-1" role="navigation">
+		<nav class="page-header" style="background-color: #FDD023" role="navigation">
 			<div class="nav-wrapper container">
 				<a id="logo-container" href="#" class="brand-logo">Schedule4Me</a>
 			</div>
@@ -22,7 +22,7 @@
 					Enter classes (eg. math 1202) separated by commas in descending order of preference: 
 					<input asp-for="Courses" />
 				</div>
-				<input type="submit" />
+				<input type="submit" class="waves-effect waves-light btn  light-blue lighten-1" /> 
 			</form>
 			<ul>
 				@foreach (var course in Model.FormattedCourses) 
@@ -37,4 +37,29 @@
 		<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 	</body>
+	<footer class="page-footer" style="background-color: #461D7C">
+		<div class="container">
+			<div class="row">
+              <div class="col 14 offset-l2 s12">
+                <h5 class="white-text">LSU Scheduler</h5>
+                <p class="grey-text text-lighten-4">Created by Drake Lambert, Neil Holloway, Connor Mayeaux, Connor Elsea.</p>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Links</h5>
+                <ul>
+                  <li><a class="grey-text text-lighten-3" href="#!">https://www.facebook.com/</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">https://twitter.com/</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">http://appl101.lsu.edu/booklet2.nsf/mainframeset</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            © 2014 Copyright text
+            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
+          </div>
+	</footer>
 </html>
