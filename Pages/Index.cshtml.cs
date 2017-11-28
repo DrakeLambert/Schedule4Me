@@ -29,9 +29,12 @@ namespace Schedule4Me.Pages
 
         private const string _apiEndpoint = "https://lsu-api.herokuapp.com";
 
-        public IndexModel(ILogger<IndexModel> logger)
+        private CourseCache _courseCache;
+
+        public IndexModel(ILogger<IndexModel> logger, CourseCache courseCache)
         {
             _logger = logger;
+            _courseCache = courseCache;
             FormattedCourses = new List<Course>();
         }
 
@@ -51,16 +54,7 @@ namespace Schedule4Me.Pages
                 .Select(userInput => Regex.Match(userInput, _courseNamePattern))
                 .Where(match => match.Success == true)
                 .Select(match => match.Value.ToLower())
-                .SelectMany(courseName =>
-                {
-                    var prefix = GetPrefix(courseName);
-                    if (!knownDepartments.ContainsKey(prefix))
-                    {
-                        knownDepartments.Add(prefix, GetDepartment(prefix));
-                    }
-                    return knownDepartments[prefix]
-                        .Where(course => course.number == GetNumber(courseName));
-                });
+                .Select(courseName => _courseCache.GetCourse(GetPrefix(courseName), GetNumber(courseName)));
 
             return Page();
         }
