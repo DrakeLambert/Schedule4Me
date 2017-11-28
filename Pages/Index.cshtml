@@ -18,13 +18,19 @@
 		<div class="container">
 			<div asp-validation-summary="All"></div>
 			<form method="POST">
-				<div>
+				<h5>
 					Enter classes (eg. math 1202) separated by commas in descending order of preference: 
 					<input asp-for="Courses" />
-				</div>
+				</h5>
 				<input type="submit" class="waves-effect waves-light btn  light-blue lighten-1" /> 
 			</form>
-			<ul>
+			@if (Model.FormattedCourses.Count > 0) 
+				{
+					<h5>
+						Here@("'")s your schedule yo:
+					</h5>
+				}
+			<ul>				
 				@foreach (var course in Model.FormattedCourses) 
 				{
 					<li>
