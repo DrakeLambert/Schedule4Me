@@ -15,7 +15,7 @@ namespace Schedule4Me.Models
 
         public override string ToString()
         {
-            return $"{abbreviation} {number}";
+            return $"{abbreviation} {number}"; 
         }
     }
 
