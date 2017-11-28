@@ -53,22 +53,20 @@ namespace Schedule4Me.Pages
                 Courses
                 .Split(',')
                 .ToList()
-                .Select(c => Regex.Match(c, _courseNamePattern))
-                .Where(m => m.Success == true)
-                .Select(m => m.Value.ToLower())
-                .Select(s =>
+                .Select(userInput => Regex.Match(userInput, _courseNamePattern))
+                .Where(match => match.Success == true)
+                .Select(match => match.Value.ToLower())
+                .SelectMany(courseName =>
                 {
-                    var prefix = GetPrefix(s);
-                    if (knownDepartments.ContainsKey(prefix))
+                    var prefix = GetPrefix(courseName);
+                    if (!knownDepartments.ContainsKey(prefix))
                     {
-                        return knownDepartments[prefix];
+                        knownDepartments.Add(prefix, GetDepartment(prefix));
                     }
-                    else
-                    {
-                        return GetDepartment(prefix) ?? new List<Course>();
-                    }
-                })
-                .SelectMany(c => c);
+                    _logger.LogInformation("");
+                    return knownDepartments[prefix]
+                        .Where(course => course.number == GetNumber(courseName));
+                });
 
             return Page();
         }
@@ -101,6 +99,14 @@ namespace Schedule4Me.Pages
                         return m2;
                     }
                 })
+                .Value;
+        }
+
+        private string GetNumber(string courseName)
+        {
+            return Regex.Matches(courseName, _courseNumberPattern)
+                .Where(m => m.Success)
+                .First()
                 .Value;
         }
     }
