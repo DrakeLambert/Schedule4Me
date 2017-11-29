@@ -26,34 +26,7 @@ namespace Schedule4Me.Models
 
                         foreach (var day in interval.days)
                         {
-                            int dayInt;
-                            switch (day.ToLower())
-                            {
-                                case "sunday":
-                                    dayInt = 0;
-                                    break;
-                                case "monday":
-                                    dayInt = 1;
-                                    break;
-                                case "tuesday":
-                                    dayInt = 2;
-                                    break;
-                                case "wednesday":
-                                    dayInt = 3;
-                                    break;
-                                case "thursday":
-                                    dayInt = 4;
-                                    break;
-                                case "friday":
-                                    dayInt = 5;
-                                    break;
-                                case "saturday":
-                                    dayInt = 6;
-                                    break;
-                                default:
-                                    dayInt = 0;
-                                    break;
-                            }
+                            int dayInt = DayStringToInt(day);
                             foreach (var time in times)
                             {
                                 iCourse.TimeIntervals.Add(new Tuple<int, int>(dayInt, time));
@@ -64,6 +37,28 @@ namespace Schedule4Me.Models
                 }
             }
             return courses;
+        }
+
+        private static int DayStringToInt(string day)
+        {
+            switch (day.ToLower())
+            {
+                case "sunday":
+                    return 0;
+                case "monday":
+                    return 1;
+                case "tuesday":
+                    return 2;
+                case "wednesday":
+                    return 3;
+                case "thursday":
+                    return 4;
+                case "friday":
+                    return 5;
+                case "saturday":
+                    return 6;
+            }
+            return 0;
         }
 
         private static List<int> StringIntervalToInt(string start, string end)
