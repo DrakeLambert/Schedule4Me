@@ -18,7 +18,15 @@
     @foreach (var course in Model.FormattedCourses) 
     {
     <li>
-        @(course) Section @(course.sections[0].number)
+        @(course)
+        <ul style="margin-left: 40px">
+            @foreach (var sect in course.sections) 
+            {
+            <li>
+                @(sect.number)
+            </li>
+            }
+        </ul>
     </li>
     }
 </ul>
