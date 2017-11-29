@@ -81,6 +81,14 @@ namespace Schedule4Me.Models
 
         private static int StringTimeToInt(string time)
         {
+            if (time.Length < 5)
+            {
+                if (time.EndsWith('N') || time.Length < 4)
+                {
+                    time = '0' + time;
+                }
+            }
+
             var hour = time.Substring(0, 2)
                 .Apply(Convert.ToInt32);
             var minute = time.Substring(2, 2)
