@@ -27,7 +27,7 @@ namespace Schedule4Me
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
         }
     }
