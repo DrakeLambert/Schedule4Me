@@ -1,6 +1,5 @@
 ﻿@page
 @model IndexModel
-@namespace Schedule4Me.Pages
 <div asp-validation-summary="All"></div>
 <form method="POST" class="input-field">
     <h5>
@@ -19,7 +18,7 @@
     @foreach (var course in Model.FormattedCourses) 
     {
     <li>
-        @(course)
+        @(course) Section @(course.sections[0].number)
     </li>
     }
 </ul>
