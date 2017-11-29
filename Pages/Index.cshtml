@@ -1,71 +1,25 @@
 ﻿@page
-@using Schedule4Me.Pages
 @model IndexModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<!DOCTYPE html>
-<html>
-	<head>
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	</head>
-	<body>
-		<nav class="page-header" style="background-color: #FDD023" role="navigation">
-			<div class="nav-wrapper container">
-				<a id="logo-container" href="#" class="brand-logo">Schedule4Me</a>
-			</div>
-		</nav>
-		<div class="container">
-			<div asp-validation-summary="All"></div>
-			<form method="POST">
-				<h5>
-					Enter classes (eg. math 1202) separated by commas in descending order of preference: 
-					<input asp-for="Courses" />
-				</h5>
-				<input type="submit" class="waves-effect waves-light btn" style="background-color: #461D7C" />
-			</form>
-			@if (Model.FormattedCourses.Count > 0) 
-				{
-					<h5>
-						Here@("'")s your schedule yo:
-					</h5>
-				}
-			<ul>				
-				@foreach (var course in Model.FormattedCourses) 
-				{
-					<li>
-						@(course)
-					</li>
-				}
-			</ul>
-		</div>
-		
-		<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-	</body>
-	<footer class="page-footer" style="background-color: #461D7C">
-		<div class="container">
-			<div class="row">
-              <div class="col 14 offset-l2 s12">
-                <h5 class="white-text">LSU Scheduler</h5>
-                <p class="grey-text text-lighten-4">Created by Drake Lambert, Neil Holloway, Connor Mayeaux, Connor Elsea.</p>
-              </div>
-              <div class="col l4 offset-l2 s12">
-                <h5 class="white-text">Links</h5>
-                <ul>
-                  <li><a class="grey-text text-lighten-3" href="#!">https://www.facebook.com/</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">https://twitter.com/</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">http://appl101.lsu.edu/booklet2.nsf/mainframeset</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="footer-copyright">
-            <div class="container">
-            © 2014 Copyright text
-            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
-            </div>
-          </div>
-	</footer>
-</html>
+@namespace Schedule4Me.Pages
+<div asp-validation-summary="All"></div>
+<form method="POST" class="input-field">
+    <h5>
+        Enter classes (eg. math 1202) separated by commas in descending order of preference: 
+    </h5>
+    <input asp-for="Courses" />
+    <input type="submit" class="waves-effect waves-light btn" style="background-color: #461D7C" />
+</form>
+@if (Model.FormattedCourses.Count > 0) 
+{
+<h5>
+    Here@("'")s your schedule yo:
+</h5>
+}
+<ul>				
+    @foreach (var course in Model.FormattedCourses) 
+    {
+    <li>
+        @(course)
+    </li>
+    }
+</ul>
