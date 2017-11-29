@@ -18,7 +18,8 @@ namespace Schedule4Me.Models
                         Code = course.GetHashCode(),
                         Number = course.number,
                         Prefix = course.abbreviation,
-                        SectionNumber = section.number
+                        SectionNumber = section.number,
+                        Value = courses.IndexOf(course)
                     };
                     foreach (var interval in section.timeIntervals)
                     {
@@ -36,6 +37,12 @@ namespace Schedule4Me.Models
                     schedule.Add(iCourse);
                 }
             }
+
+
+
+
+
+
             return courses;
         }
 
