@@ -55,7 +55,8 @@ namespace Schedule4Me.Pages
                 .Where(match => match.Success == true)
                 .Select(match => match.Value.ToLower())
                 .Select(courseName => _courseCache.GetCourse(GetPrefix(courseName), GetNumber(courseName)))
-                .ToList();
+                .ToList()
+                .Schedule();            
 
             return Page();
         }
