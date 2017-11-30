@@ -49,7 +49,7 @@
         }
         <td>@(hour):@(string.Format("{0:D2}", minute))</td>
         @for (var j = 1; j < 6; j++) {
-            <td>@(Model.Schedule[i + 1][j])</td>
+            <td>@(Model.Schedule[i][j])</td>
         }
     </tr>
     }
