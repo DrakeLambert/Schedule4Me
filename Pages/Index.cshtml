@@ -5,20 +5,53 @@
     <h5>
         Enter classes (eg. math 1202) separated by commas in descending order of preference: 
     </h5>
-    <input asp-for="Courses" />
-    <input type="submit" class="waves-effect waves-light btn" style="background-color: #461D7C" />
+    <div class="row">
+        <div class="col s10">
+            <input asp-for="Courses" />
+        </div>
+        <div class="col s2">
+            <button type="submit" class="waves-effect waves-light btn" style="background-color: #461D7C">Submit</button>
+        </div>
+    </div>
 </form>
 @if (Model.FormattedCourses.Count > 0) 
 {
 <h5>
     Here@("'")s your schedule yo:
 </h5>
-}
-<ul>				
+<ul class="collection">
     @foreach (var course in Model.FormattedCourses) 
     {
-    <li>
+    <li class="collection-item">
         @(course)
     </li>
     }
 </ul>
+<table class="bordered">
+    <tr>
+        <th>Time</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+    </tr>
+    @for (var i = 14; i < 46; i++) 
+    {
+    <tr>
+        @{
+            var hour = i / 2;
+            if (hour > 12) 
+            {
+                hour -= 12;
+            }
+            var minute = i % 2 * 30;
+        }
+        <td>@(hour):@(string.Format("{0:D2}", minute))</td>
+        @for (var j = 1; j < 6; j++) {
+            <td>@(Model.Schedule[i + 1][j])</td>
+        }
+    </tr>
+    }
+</table>
+}
