@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Net.Http;
 using System;
 using Newtonsoft.Json;
+using System.Collections;
 
 namespace Schedule4Me.Pages
 {
@@ -18,6 +19,8 @@ namespace Schedule4Me.Pages
         public string Courses { get; set; }
 
         public List<IdentifiableSection> FormattedCourses { get; set; }
+
+        public Dictionary<int, Dictionary<int, string>> Schedule { get; set; }
 
         private ILogger<IndexModel> _logger;
 
@@ -36,6 +39,7 @@ namespace Schedule4Me.Pages
             _logger = logger;
             _courseCache = courseCache;
             FormattedCourses = new List<IdentifiableSection>();
+            Schedule = new Dictionary<int, Dictionary<int, string>>();
         }
 
         public IActionResult OnPost()
@@ -57,13 +61,30 @@ namespace Schedule4Me.Pages
                 .Select(courseName => _courseCache.GetCourse(GetPrefix(courseName), GetNumber(courseName)))
                 .Where(course => course != null)
                 .Distinct()
-                .Select(course => {
+                .Select(course =>
+                {
                     course.sections = course.sections.Where(section => section.enrollment_is_full == "false" && section.timeIntervals.All(sect => sect.start != "TBA")).ToArray();
                     return course;
                 })
                 .Where(course => course.sections.Length > 0)
                 .ToList()
                 .Schedule();
+
+            for (var i = 0; i < 48; i++)
+            {
+                Schedule.Add(i, new Dictionary<int, string>());
+                for (var j = 0; j < 7; j++) {
+                    Schedule[i].Add(j, "");
+                }
+            }
+
+            foreach (var course in FormattedCourses)
+            {
+                foreach (var interval in course.TimeIntervals)
+                {
+                    Schedule[interval.Item2][interval.Item1] = course.ToString();
+                }
+            }
 
             return Page();
         }
