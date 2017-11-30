@@ -111,7 +111,7 @@ namespace Schedule4Me.Models
             {
                 foreach (var interval2 in section2.TimeIntervals)
                 {
-                    if (interval1.Item1 == interval2.Item2 && interval1.Item2 == interval2.Item2)
+                    if (interval1.Item1 == interval2.Item1 && interval1.Item2 == interval2.Item2)
                     {
                         return true;
                     }
