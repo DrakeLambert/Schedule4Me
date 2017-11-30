@@ -1,19 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Schedule4Me.Models
 {
     public static class CourseAI
     {
-        public static List<Course> Schedule(this List<Course> courses)
+        public static List<IdentifiableSection> Schedule(this List<Course> courses)
         {
-            var schedule = new Schedule();
+            if (courses.Count < 1)
+            {
+                return new List<IdentifiableSection>();
+            }
+
+            var iCourses = new List<List<IdentifiableSection>>();
 
             foreach (var course in courses)
             {
+                var iCourse = new List<IdentifiableSection>();
+                iCourses.Add(iCourse);
                 foreach (var section in course.sections)
                 {
-                    var iCourse = new IdentifiableCourse
+                    var iSection = new IdentifiableSection
                     {
                         Code = course.GetHashCode(),
                         Number = course.number,
@@ -30,20 +38,86 @@ namespace Schedule4Me.Models
                             int dayInt = DayStringToInt(day);
                             foreach (var time in times)
                             {
-                                iCourse.TimeIntervals.Add(new Tuple<int, int>(dayInt, time));
+                                iSection.TimeIntervals.Add(new Tuple<int, int>(dayInt, time));
                             }
                         }
                     }
-                    schedule.Add(iCourse);
+                    iCourse.Add(iSection);
                 }
             }
 
+            var outSchedule = new List<IdentifiableSection>();
 
+            var i = 1;
+            var deepest = 0;
+            var j = 0;
+            outSchedule.Add(iCourses[0][0]);
+            while (outSchedule.Count < iCourses.Count)
+            {
+                if (iCourses[i].Count > j)
+                {
+                    for (var k = 0; k < i; k++)
+                    {
+                        var conflict = false;
+                        foreach (var sect in outSchedule)
+                        {
+                            if (iCourses[i][j].HasConflict(sect))
+                            {
+                                conflict = true;
+                                break;
+                            }
+                        }
+                        if (conflict)
+                        {
+                            k = -1;
+                            if (iCourses[i].Count > j + 1)
+                            {
+                                j++;
+                            }
+                            else
+                            {
+                                i--;
+                                j = iCourses.Where(course => course.Contains(outSchedule[i])).First().IndexOf(outSchedule[i]) + 1;
+                                if (i == 0 && iCourses[i].Count <= j)
+                                {
+                                    iCourses.Remove(iCourses[deepest]);
+                                    i = deepest;
+                                    j = 0;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            outSchedule.Add(iCourses[i][j]);
+                            j = 0;
+                            i++;
+                            break;
+                        }
+                    }
+                }
+                if (i > deepest)
+                {
+                    deepest = i;
+                }
+            }
 
+            return outSchedule;
+        }
 
-
-
-            return courses;
+        private static bool HasConflict(this IdentifiableSection section1, IdentifiableSection section2)
+        {
+            foreach (var interval1 in section1.TimeIntervals)
+            {
+                foreach (var interval2 in section2.TimeIntervals)
+                {
+                    if (interval1.Item1 == interval2.Item2 && interval1.Item2 == interval2.Item2)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private static int DayStringToInt(string day)
@@ -90,10 +164,8 @@ namespace Schedule4Me.Models
                 }
             }
 
-            var hour = time.Substring(0, 2)
-                .Apply(Convert.ToInt32);
-            var minute = time.Substring(2, 2)
-                .Apply(Convert.ToInt32);
+            var hour = Convert.ToInt32(time.Substring(0, 2));
+            var minute = Convert.ToInt32(time.Substring(2, 2));
 
             hour += 1;
             if (hour < 6 || time.EndsWith('N'))
@@ -107,11 +179,6 @@ namespace Schedule4Me.Models
                 return hour;
             }
             return hour + 1;
-        }
-
-        private static F Apply<T, F>(this T value, Func<T, F> function)
-        {
-            return function(value);
         }
     }
 }
