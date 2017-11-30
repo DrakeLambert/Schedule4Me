@@ -18,13 +18,20 @@ namespace Schedule4Me.Models
             TimeIntervals = new List<Tuple<int, int>>();
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return Prefix + " " + Number + " Section " + SectionNumber;
         }
 
-        public override bool Equals(object obj) {
+        public override bool Equals(object obj)
+        {
             var section = obj as IdentifiableSection;
             return section != null && section.Number == Number && section.Code == Code;
+        }
+
+        public override int GetHashCode()
+        {
+            return Code;
         }
     }
 }
