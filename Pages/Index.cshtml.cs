@@ -17,11 +17,11 @@ namespace Schedule4Me.Pages
         [BindProperty]
         public string Courses { get; set; }
 
-        public List<Course> FormattedCourses { get; set; }
+        public List<IdentifiableSection> FormattedCourses { get; set; }
 
         private ILogger<IndexModel> _logger;
 
-        private const string _coursePrefixPattern = "[A-z]{3,4}";
+        private const string _coursePrefixPattern = "[A-z]{2,4}";
 
         private const string _courseNumberPattern = "[0-9]{4}";
 
@@ -35,7 +35,7 @@ namespace Schedule4Me.Pages
         {
             _logger = logger;
             _courseCache = courseCache;
-            FormattedCourses = new List<Course>();
+            FormattedCourses = new List<IdentifiableSection>();
         }
 
         public IActionResult OnPost()
@@ -50,13 +50,18 @@ namespace Schedule4Me.Pages
             FormattedCourses =
                 Courses
                 .Split(',')
-                .AsQueryable()
+                .ToList()
                 .Select(userInput => Regex.Match(userInput, _courseNamePattern))
                 .Where(match => match.Success == true)
                 .Select(match => match.Value.ToLower())
                 .Select(courseName => _courseCache.GetCourse(GetPrefix(courseName), GetNumber(courseName)))
                 .Where(course => course != null)
                 .Distinct()
+                .Select(course => {
+                    course.sections = course.sections.Where(section => section.enrollment_is_full == "false" && section.timeIntervals.All(sect => sect.start != "TBA")).ToArray();
+                    return course;
+                })
+                .Where(course => course.sections.Length > 0)
                 .ToList()
                 .Schedule();
 
