@@ -147,7 +147,7 @@ namespace Schedule4Me.Models
             var startInt = StringTimeToInt(start);
             var endInt = StringTimeToInt(end);
             var times = new List<int>();
-            for (; startInt < endInt; startInt++)
+            for (; startInt <= endInt; startInt++)
             {
                 times.Add(startInt);
             }
@@ -167,14 +167,14 @@ namespace Schedule4Me.Models
             var hour = Convert.ToInt32(time.Substring(0, 2));
             var minute = Convert.ToInt32(time.Substring(2, 2));
 
-            hour += 1;
+            //hour += 1;
             if (hour < 6 || time.EndsWith('N'))
             {
                 // Afternoon
                 hour += 12;
             }
             hour *= 2;
-            if (minute <= 30)
+            if (minute < 30)
             {
                 return hour;
             }
